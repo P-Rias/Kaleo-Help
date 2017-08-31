@@ -124,12 +124,14 @@ class PokemonData:
         print "\n".join(format(ord(x), 'b') for x in self.binary)
 
 class StageData:
-    def __init__(self, index, event=False):
+    def __init__(self, index, event=False, expert=False):
         self.index = index
         
         #open file and extract the snippet we need
         if event:
             file = open("StageDataEvent.bin", "rb")
+        elif expert:
+            file = open("StageDataExtra.bin", "rb")
         else:
             file = open("stageData.bin", "rb")
         contents = file.read()
@@ -247,16 +249,28 @@ def main(args):
             else:
                 sdata = StageData(int(index))
                 sdata.printdata()
+
+        elif datatype == "expert":
+            if index == "all":
+                numentries = getnumentries("stageDataExtra.bin")
+                for i in range(numentries):
+                    sdata = StageData(i, False, True)
+                    sdata.printdata()
+                    print
+            else:
+                sdata = StageData(int(index), False, True)
+                sdata.printdata()
+        
         
         elif datatype == "eventstage":
             if index == "all":
                 numentries = getnumentries("stageDataEvent.bin")
                 for i in range(numentries):
-                    sdata = StageData(i, True)
+                    sdata = StageData(i, True, False)
                     sdata.printdata()
                     print
             else:
-                sdata = StageData(int(index), True)
+                sdata = StageData(int(index), True, False)
                 sdata.printdata()
         
         elif datatype == "pokemon":
